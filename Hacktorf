@@ -1,0 +1,13 @@
+cyleesoft system >
+
+mkfifo ./my.fifo
+ 
+ffmpeg -re -i alizee.mp3 -ar 48000 -f wav - |toolame -s 48 -D 4 -b 128 /dev/stdin ./my.fifo
+ 
+ 
+CRC-DabMux -A ./my.fifo -b 128 -i 1 -p 3 \
+    -S -L "Startest HackRF.net" -C -i1 \
+    -O fifo:///dev/stdout | \
+    crc-dabmod -f -g0 -r 3200000 |\
+    python hackrf_dab_sink.py
+ 
